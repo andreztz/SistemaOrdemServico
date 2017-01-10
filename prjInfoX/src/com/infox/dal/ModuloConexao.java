@@ -16,10 +16,6 @@ import java.sql.*;
  * @author ztz
  */
 
-
-
-
-
 public class ModuloConexao {
     // Método Responsável por estabelecer a conexão com o banco.
 

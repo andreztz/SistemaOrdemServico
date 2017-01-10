@@ -7,6 +7,7 @@ package com.infox.telas;
 
 import java.sql.*;
 import com.infox.dal.ModuloConexao;
+import java.awt.Color;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,7 +17,7 @@ import javax.swing.JOptionPane;
 public class TelaLogin extends javax.swing.JFrame {
     Connection conexao = null;
     PreparedStatement pst = null;
-    ResultSet rs = null;
+    ResultSet query = null;
     
     public void logar(){
         String sql = "select * from tbusuarios where login=? and senha=?";
@@ -27,11 +28,23 @@ public class TelaLogin extends javax.swing.JFrame {
             pst.setString(1, txtUsuario.getText());
             pst.setString(2, txtSenha.getText());
             // a linha a baixo executa a query 
-            rs = pst.executeQuery();
+            query = pst.executeQuery();
             // se existir usuário é senha correspondente
-            if (rs.next()) {
+            if (query.next()) {
+                // a linha a baixo obtém o conteúdo do campo perfil da tbusuarios.
+                String perfil = query.getString(6);
+                //System.out.println(perfil);
+                // a estrutura a baixo faz o tratamento do perfil de usuário.
                 TelaPrincipal principal = new TelaPrincipal();
                 principal.setVisible(true);
+                // Define nome do usuário com uma query no bd.
+                TelaPrincipal.lblUsuario.setText(query.getString(2));
+                // a condição a baixo define perfil de administrador.
+                if (perfil.equals("admin")) {
+                    TelaPrincipal.MenRel.setEnabled(true);
+                    TelaPrincipal.MenCadUsu.setEnabled(true);
+                    TelaPrincipal.lblUsuario.setForeground(Color.red);                    
+                }
                 this.dispose();
                 conexao.close();
             } else {
@@ -89,6 +102,11 @@ public class TelaLogin extends javax.swing.JFrame {
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
+            }
+        });
+        btnLogin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnLoginKeyPressed(evt);
             }
         });
 
@@ -157,6 +175,10 @@ public class TelaLogin extends javax.swing.JFrame {
         // chama o metodo logar()
         logar();
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnLoginKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLoginKeyPressed
 
     /**
      * @param args the command line arguments
