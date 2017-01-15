@@ -6,17 +6,61 @@
 package com.infox.telas;
 
 /**
- *
+ * Passo 13
  * @author ztz
  */
-public class TelaUsuario extends javax.swing.JInternalFrame {
+import java.sql.*;
+import com.infox.dal.ModuloConexao;
+import javax.swing.JOptionPane;
 
+public class TelaUsuario extends javax.swing.JInternalFrame {
+    // variavel conexão DAL
+    Connection conexao = null;
+    // variável de conexão com o bd
+    // PreparedStatement e ResultSet são classes do pacote java.sql
+    // e servem para preparar e usar instruções SQL.
+    PreparedStatement pst = null;
+    ResultSet query = null;
+    
     /**
      * Creates new form TelaUsuario
      */
     public TelaUsuario() {
+                // Construtor da classe TelaPrincipal.
         initComponents();
+        conexao = ModuloConexao.conector();
     }
+    
+    private void consultar(){
+        String sql = "select * from tbusuarios where iduser=?"; 
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtUsuId.getText());
+            query = pst.executeQuery();
+            
+            if (query.next()) {
+                txtUsuNome.setText(query.getString(2));
+                txtUsuFone.setText(query.getString(3));
+                txtUsuLogin.setText(query.getString(4));
+                txtUsuSenha.setText(query.getString(5));
+                cboUsuPerfil.setSelectedItem(query.getString(6));
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuário não cadastrado.");
+                // limpa campos formulário.
+                // txtUsuId.setText(null);
+                txtUsuNome.setText(null);
+                txtUsuFone.setText(null);
+                txtUsuLogin.setText(null);
+                txtUsuSenha.setText(null);
+                cboUsuPerfil.setSelectedItem(null);
+            }
+            
+        } catch (Exception error) {
+
+            JOptionPane.showMessageDialog(null, error);
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,6 +134,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnUsuRead.setToolTipText("Ler");
         btnUsuRead.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUsuRead.setPreferredSize(new java.awt.Dimension(80, 80));
+        btnUsuRead.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUsuReadActionPerformed(evt);
+            }
+        });
 
         btnUsuDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/infox/icones/delete.png"))); // NOI18N
         btnUsuDelete.setToolTipText("Remover");
@@ -174,6 +223,12 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private void txtUsuFoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuFoneActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuFoneActionPerformed
+
+    private void btnUsuReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuReadActionPerformed
+        // TODO add your handling code here:
+        // chama o método consultar.
+        consultar();
+    }//GEN-LAST:event_btnUsuReadActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

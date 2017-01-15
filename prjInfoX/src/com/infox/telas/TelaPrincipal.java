@@ -10,15 +10,20 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 
 /**
- *
+ *  
+ * 
  * @author ztz
  */
-public class TelaPrincipal extends javax.swing.JFrame {
 
+
+
+public class TelaPrincipal extends javax.swing.JFrame {
+    
     /**
      * Creates new form TelaPrincipal
      */
     public TelaPrincipal() {
+        // Construtor da classe TelaPrincipal.
         initComponents();
     }
 
